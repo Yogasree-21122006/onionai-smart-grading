@@ -46,6 +46,7 @@ class CertificateRequest(BaseModel):
     market_name: str
     farmer_name: Optional[str] = "Farmer Ravi"
     location: Optional[str] = "Coimbatore, Tamil Nadu"
+    app_url_base: Optional[str] = "http://localhost:5173"
 
 @app.get("/")
 def root():
@@ -117,7 +118,8 @@ def create_certificate(payload: CertificateRequest):
         quantity_kg=payload.quantity_kg,
         market_name=payload.market_name,
         farmer_name=payload.farmer_name,
-        location=payload.location
+        location=payload.location,
+        app_url_base=payload.app_url_base or "http://localhost:5173"
     )
     return result
 
@@ -129,4 +131,5 @@ def verify_certificate(batch_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
