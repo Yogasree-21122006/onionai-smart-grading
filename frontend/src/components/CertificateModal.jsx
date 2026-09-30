@@ -24,7 +24,8 @@ export function CertificateModal({ isOpen, onClose, result, t, quantityKg = 100 
           quantity_kg: quantityKg,
           market_name: 'Coimbatore Mandi (TN)',
           farmer_name: 'Farmer Ravi',
-          location: 'Coimbatore, Tamil Nadu'
+          location: 'Coimbatore, Tamil Nadu',
+          app_url_base: window.location.origin
         })
       })
         .then(res => res.json())

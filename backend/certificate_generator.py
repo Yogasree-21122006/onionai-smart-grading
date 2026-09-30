@@ -22,7 +22,7 @@ def generate_digital_certificate(
     market_name: str,
     farmer_name: str = "Farmer Ravi",
     location: str = "Coimbatore, Tamil Nadu",
-    app_url_base: str = "http://localhost:5173"
+    app_url_base: str = "https://onionai-smart-grading.vercel.app"
 ) -> Dict[str, Any]:
     timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     date_str = datetime.now().strftime("%d-%m-%Y")

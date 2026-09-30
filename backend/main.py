@@ -46,7 +46,7 @@ class CertificateRequest(BaseModel):
     market_name: str
     farmer_name: Optional[str] = "Farmer Ravi"
     location: Optional[str] = "Coimbatore, Tamil Nadu"
-    app_url_base: Optional[str] = "http://localhost:5173"
+    app_url_base: Optional[str] = "https://onionai-smart-grading.vercel.app"
 
 @app.get("/")
 def root():
@@ -119,7 +119,7 @@ def create_certificate(payload: CertificateRequest):
         market_name=payload.market_name,
         farmer_name=payload.farmer_name,
         location=payload.location,
-        app_url_base=payload.app_url_base or "http://localhost:5173"
+        app_url_base=payload.app_url_base or "https://onionai-smart-grading.vercel.app"
     )
     return result
 

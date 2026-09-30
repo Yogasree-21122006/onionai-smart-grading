@@ -102,7 +102,8 @@ export function AppDashboard({ t, lang, setLang, onBackToLanding }) {
           quantity_kg: quantityKg,
           market_name: pricingData ? pricingData.market_name : 'Coimbatore (TN)',
           farmer_name: 'Farmer Ravi',
-          location: 'Coimbatore, Tamil Nadu'
+          location: 'Coimbatore, Tamil Nadu',
+          app_url_base: window.location.origin
         })
       })
         .then(res => res.json())
