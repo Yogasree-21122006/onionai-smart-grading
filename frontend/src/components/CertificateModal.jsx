@@ -55,98 +55,93 @@ export function CertificateModal({ isOpen, onClose, result, t, quantityKg = 100 
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="relative max-w-lg w-full bg-white rounded-3xl overflow-hidden shadow-2xl border-4 border-orange-200 animate-in fade-in zoom-in-95 duration-200">
+    <div style={{ position: 'fixed', inset: 0, zIndex: 100, backgroundColor: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', overflowY: 'auto' }}>
+      <div style={{ position: 'relative', maxWidth: '540px', width: '100%', background: 'white', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.2)', border: '2px solid #fed7aa' }}>
         
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full w-8 h-8 flex items-center justify-center font-bold z-10 transition-all"
+          style={{ position: 'absolute', top: '16px', right: '16px', color: '#64748b', background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', cursor: 'pointer', zIndex: 10 }}
         >
           ✕
         </button>
 
         {/* Certificate Card Printable Area */}
-        <div id="printable-certificate" className="p-6 sm:p-8 bg-gradient-to-b from-orange-50/40 via-white to-orange-50/30">
+        <div id="printable-certificate" style={{ padding: '24px', background: 'linear-gradient(180deg, #fffaf5 0%, #ffffff 100%)' }}>
           
           {/* Certificate Brand Header */}
-          <div className="text-center pb-5 border-b-2 border-dashed border-orange-200">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <img src="/assets/logo.png" alt="OnionAI" className="w-10 h-10 object-contain rounded-full" />
-              <span className="text-2xl font-black text-slate-900 tracking-tight brand-font">
-                Onion<span className="text-orange-500">AI</span>
+          <div style={{ textAlign: 'center', paddingBottom: '16px', borderBottom: '2px dashed #fed7aa' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+              <img src="/assets/logo.png" alt="OnionAI" style={{ width: '42px', height: '42px', borderRadius: '50%', border: '2px solid #fed7aa', padding: '2px', background: 'white' }} />
+              <span style={{ fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.5px' }} className="brand-font">
+                Onion<span style={{ color: '#ff6a00' }}>AI</span>
               </span>
             </div>
-            <h3 className="text-lg font-black text-slate-800 uppercase tracking-widest mt-2">
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '6px' }}>
               Onion Grading Certificate
             </h3>
-            <p className="text-[11px] text-slate-500 font-medium">
-              Tamper-Evident AGMARKNET / e-NAM Digital Quality Pass
+            <p style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>
+              Tamper-Evident AGMARKNET / e-NAM Digital Pass
             </p>
           </div>
 
           {/* Certificate Body Data */}
           {loading ? (
-            <div className="py-12 text-center text-sm font-bold text-slate-500">
+            <div style={{ padding: '40px 0', textAlign: 'center', fontSize: '0.9rem', fontWeight: 700, color: '#64748b' }}>
               Generating Tamper-Evident QR Certificate...
             </div>
           ) : certData ? (
-            <div className="mt-5 space-y-4">
+            <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               
               {/* Key Value Table */}
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2.5">
-                <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                  <span className="font-bold text-slate-500">{t.batchId}</span>
-                  <span className="font-black text-slate-900 font-mono text-sm">{certData.batch_id}</span>
+              <div style={{ background: '#f8fafc', padding: '12px 16px', borderRadius: '16px', border: '1px solid #e2e8f0', fontSize: '0.82rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #e2e8f0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>{t.batchId}</span>
+                  <span style={{ fontWeight: 900, color: '#0f172a', fontFamily: 'monospace', fontSize: '0.9rem' }}>{certData.batch_id}</span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                  <span className="font-bold text-slate-500">Quality Grade</span>
-                  <span className="font-black text-emerald-700 bg-emerald-100 px-3 py-0.5 rounded-full text-xs">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #e2e8f0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>Quality Grade</span>
+                  <span style={{ fontWeight: 900, color: '#059669', background: '#ecfdf5', padding: '2px 8px', borderRadius: '12px', border: '1px solid #a7f3d0' }}>
                     {certData.quality_grade}
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                  <span className="font-bold text-slate-500">Bulb Sizing</span>
-                  <span className="font-bold text-slate-800">{certData.size_category}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #e2e8f0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>Bulb Sizing</span>
+                  <span style={{ fontWeight: 800, color: '#0f172a' }}>{certData.size_category}</span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                  <span className="font-bold text-slate-500">Defect Rate</span>
-                  <span className="font-bold text-slate-800">{certData.defect_rate_pct}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #e2e8f0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>Defect Rate</span>
+                  <span style={{ fontWeight: 800, color: certData.defect_rate_pct <= 5 ? '#059669' : '#ea580c' }}>{certData.defect_rate_pct}%</span>
                 </div>
-                <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                  <span className="font-bold text-slate-500">Estimated Fair Price</span>
-                  <span className="font-black text-emerald-600 text-sm">₹{certData.fair_price_per_kg} / kg</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #e2e8f0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>Estimated Fair Price</span>
+                  <span style={{ fontWeight: 900, color: '#059669', fontSize: '0.95rem' }}>₹{certData.fair_price_per_kg} / kg</span>
                 </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="font-bold text-slate-500">{t.dateIssued}</span>
-                  <span className="font-bold text-slate-800">{certData.date}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
+                  <span style={{ fontWeight: 700, color: '#64748b' }}>{t.dateIssued}</span>
+                  <span style={{ fontWeight: 800, color: '#0f172a' }}>{certData.date}</span>
                 </div>
               </div>
 
               {/* QR Code & Verified Stamp Row */}
-              <div className="p-4 rounded-2xl bg-white border-2 border-emerald-300 flex items-center justify-between gap-4 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-7 h-7 text-emerald-600" />
+              <div className="cert-qr-stamp-box">
+                <div className="cert-qr-stamp-info">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#065f46', fontWeight: 900, fontSize: '0.85rem' }}>
+                    <ShieldCheck style={{ width: '18px', height: '18px', color: '#059669' }} />
+                    <span>VERIFIED & TRUSTED</span>
                   </div>
-                  <div>
-                    <span className="text-xs font-black text-emerald-800 uppercase block tracking-wider">
-                      Verified & Trusted
-                    </span>
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      HASH: {certData.integrity_hash}
-                    </span>
-                  </div>
+                  <p style={{ fontSize: '0.72rem', color: '#047857', fontFamily: 'monospace', marginTop: '4px', wordBreak: 'break-all' }}>
+                    HASH: {certData.integrity_hash}
+                  </p>
                 </div>
 
-                {/* Scannable QR Code */}
-                <div className="text-center flex-shrink-0">
+                <div className="cert-qr-stamp-code">
                   <img 
                     src={certData.qr_code_base64} 
                     alt="Traceability QR Code" 
-                    className="w-20 h-20 rounded-lg border border-slate-300 shadow-sm"
+                    className="cert-qr-img"
                   />
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tight block mt-0.5">
+                  <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#64748b', display: 'block', marginTop: '3px' }}>
                     Scan to Verify
                   </span>
                 </div>
@@ -158,26 +153,29 @@ export function CertificateModal({ isOpen, onClose, result, t, quantityKg = 100 
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap gap-2 justify-between items-center">
+        <div style={{ padding: '14px 20px', background: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'space-between', alignItems: 'center' }}>
           <button
             onClick={handleCopyLink}
-            className="text-xs font-bold text-slate-700 hover:text-orange-600 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm transition-all"
+            className="btn-white"
+            style={{ fontSize: '0.78rem', padding: '8px 14px' }}
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
-            {copied ? "Link Copied!" : "Copy Verify Link"}
+            {copied ? <Check style={{ width: 14, height: 14, color: '#059669' }} /> : <Share2 style={{ width: 14, height: 14 }} />}
+            <span>{copied ? "Link Copied!" : "Copy Verify Link"}</span>
           </button>
 
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={handlePrint}
-              className="btn-secondary !py-2 !px-3.5 text-xs font-bold"
+              className="btn-white"
+              style={{ fontSize: '0.78rem', padding: '8px 14px' }}
             >
-              <Printer className="w-3.5 h-3.5" />
-              Print / Save PDF
+              <Printer style={{ width: 14, height: 14 }} />
+              <span>Print PDF</span>
             </button>
             <button
               onClick={onClose}
-              className="btn-primary-orange !py-2 !px-4 text-xs font-bold"
+              className="btn-orange"
+              style={{ fontSize: '0.78rem', padding: '8px 18px' }}
             >
               Done
             </button>

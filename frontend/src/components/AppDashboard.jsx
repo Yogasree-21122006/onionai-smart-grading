@@ -812,67 +812,114 @@ export function AppDashboard({ t, lang, setLang, onBackToLanding }) {
             <div className="card" style={{ maxWidth: '640px', margin: '0 auto' }}>
               
               {/* Certificate Inner Form */}
-              <div style={{ border: '2px solid #fed7aa', borderRadius: '20px', padding: '28px', background: 'linear-gradient(180deg, #fffaf5 0%, #ffffff 100%)' }}>
+              <div className="cert-card-container" id="printable-certificate">
                 
                 {/* Cert Header */}
                 <div style={{ textAlign: 'center', borderBottom: '2px dashed #fed7aa', paddingBottom: '16px', marginBottom: '20px' }}>
-                  <img src="/assets/logo.png" alt="OnionAI" style={{ width: '48px', height: '48px', margin: '0 auto 6px auto', borderRadius: '50%' }} />
-                  <h3 style={{ fontSize: '1.3rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  <img src="/assets/logo.png" alt="OnionAI" style={{ width: '52px', height: '52px', margin: '0 auto 8px auto', borderRadius: '50%', border: '2px solid #fed7aa', padding: '2px', background: 'white' }} />
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Onion Grading Certificate
                   </h3>
-                  <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
                     Tamper-Evident AGMARKNET / e-NAM Digital Pass
                   </p>
                 </div>
 
                 {/* Cert Fields */}
                 {certData ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <span style={{ color: '#64748b', fontWeight: 700 }}>{t.batchId}</span>
-                      <span style={{ fontWeight: 900, fontFamily: 'monospace', color: '#ff6a00' }}>{certData.batch_id}</span>
+                      <span style={{ fontWeight: 900, fontFamily: 'monospace', color: '#ff6a00', fontSize: '0.95rem' }}>{certData.batch_id}</span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <span style={{ color: '#64748b', fontWeight: 700 }}>Quality Grade</span>
-                      <span style={{ fontWeight: 900, color: '#059669' }}>{certData.quality_grade}</span>
+                      <span style={{ fontWeight: 900, color: '#059669', background: '#ecfdf5', padding: '3px 10px', borderRadius: '12px', border: '1px solid #a7f3d0' }}>
+                        {certData.quality_grade}
+                      </span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <span style={{ color: '#64748b', fontWeight: 700 }}>Bulb Sizing</span>
-                      <span style={{ fontWeight: 700 }}>{certData.size_category}</span>
+                      <span style={{ fontWeight: 800, color: '#0f172a' }}>{certData.size_category}</span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <span style={{ color: '#64748b', fontWeight: 700 }}>Defect Rate</span>
-                      <span style={{ fontWeight: 700 }}>{certData.defect_rate_pct}%</span>
+                      <span style={{ fontWeight: 800, color: certData.defect_rate_pct <= 5 ? '#059669' : '#ea580c' }}>
+                        {certData.defect_rate_pct}%
+                      </span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-                      <span style={{ color: '#64748b', fontWeight: 700 }}>Estimated Price</span>
-                      <span style={{ fontWeight: 900, color: '#059669' }}>₹{certData.fair_price_per_kg} / kg</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
+                      <span style={{ color: '#64748b', fontWeight: 700 }}>Recommended Fair Rate</span>
+                      <span style={{ fontWeight: 900, color: '#059669', fontSize: '0.95rem' }}>
+                        ₹{certData.fair_price_per_kg} / kg
+                      </span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
+                      <span style={{ color: '#64748b', fontWeight: 700 }}>Total Fair Batch Value</span>
+                      <span style={{ fontWeight: 900, color: '#ea580c', fontSize: '0.95rem' }}>
+                        ₹{Number(certData.estimated_total_value || (certData.fair_price_per_kg * quantityKg)).toLocaleString()} ({quantityKg} kg)
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f1f5f9' }}>
                       <span style={{ color: '#64748b', fontWeight: 700 }}>Inspection Date</span>
-                      <span style={{ fontWeight: 700 }}>{certData.date}</span>
+                      <span style={{ fontWeight: 800, color: '#0f172a' }}>{certData.date}</span>
                     </div>
 
                     {/* QR Code and Stamp */}
-                    <div style={{ marginTop: '16px', padding: '16px', background: '#ecfdf5', borderRadius: '16px', border: '1px solid #a7f3d0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
+                    <div className="cert-qr-stamp-box">
+                      <div className="cert-qr-stamp-info">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#065f46', fontWeight: 900, fontSize: '0.85rem' }}>
                           <ShieldCheck style={{ width: '18px', height: '18px', color: '#059669' }} />
-                          VERIFIED & AUTHENTICATED
+                          <span>VERIFIED & AUTHENTICATED</span>
                         </div>
-                        <p style={{ fontSize: '0.68rem', color: '#047857', fontFamily: 'monospace', marginTop: '4px' }}>
+                        <p style={{ fontSize: '0.72rem', color: '#047857', fontFamily: 'monospace', marginTop: '4px', wordBreak: 'break-all' }}>
                           HASH: {certData.integrity_hash}
                         </p>
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+                          <button
+                            onClick={() => {
+                              if (certData.verification_url) {
+                                navigator.clipboard.writeText(certData.verification_url);
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 2500);
+                              }
+                            }}
+                            className="btn-white"
+                            style={{ padding: '4px 10px', fontSize: '0.72rem', borderRadius: '8px' }}
+                          >
+                            {copied ? <Check style={{ width: 12, height: 12, color: '#059669' }} /> : <Share2 style={{ width: 12, height: 12 }} />}
+                            <span>{copied ? 'Copied!' : 'Copy Link'}</span>
+                          </button>
+                          
+                          {certData.verification_url && (
+                            <a
+                              href={certData.verification_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn-white"
+                              style={{ padding: '4px 10px', fontSize: '0.72rem', borderRadius: '8px', textDecoration: 'none', color: '#334155' }}
+                            >
+                              <ExternalLink style={{ width: 12, height: 12 }} />
+                              <span>Open Live Record</span>
+                            </a>
+                          )}
+                        </div>
                       </div>
 
-                      <div style={{ textAlign: 'center' }}>
-                        <img src={certData.qr_code_base64} alt="QR" style={{ width: '84px', height: '84px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-                        <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#64748b', display: 'block', marginTop: '2px' }}>
+                      <div className="cert-qr-stamp-code">
+                        <img 
+                          src={certData.qr_code_base64} 
+                          alt="QR Code" 
+                          className="cert-qr-img" 
+                        />
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748b', display: 'block', marginTop: '4px' }}>
                           Scan to Verify
                         </span>
                       </div>
@@ -880,13 +927,13 @@ export function AppDashboard({ t, lang, setLang, onBackToLanding }) {
 
                   </div>
                 ) : (
-                  <p style={{ textAlign: 'center', padding: '20px 0' }}>Generating certificate...</p>
+                  <p style={{ textAlign: 'center', padding: '24px 0', color: '#64748b', fontWeight: 600 }}>Generating cryptographic certificate...</p>
                 )}
 
               </div>
 
               {/* Actions */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap', gap: '10px' }}>
                 <button onClick={() => window.print()} className="btn-white">
                   <Printer style={{ width: '15px', height: '15px' }} />
                   <span>Print PDF</span>

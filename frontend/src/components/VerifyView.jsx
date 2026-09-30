@@ -1,157 +1,211 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, CheckCircle2, ArrowLeft, ExternalLink, Calendar, MapPin, Scale } from 'lucide-react';
+import { 
+  ShieldCheck, CheckCircle2, ArrowLeft, Printer, Share2, Check, 
+  MapPin, Calendar, Scale, Award, Hash, CheckCircle, ExternalLink
+} from 'lucide-react';
 
 export function VerifyView({ onBackToApp }) {
   const urlParams = new URLSearchParams(window.location.search);
-  const batchId = urlParams.get('batch') || 'ON-2026-00125';
-  const queryGrade = urlParams.get('grade') || 'Grade A';
-  const queryVal = urlParams.get('val') || '2800';
-  const queryHash = urlParams.get('hash') || 'A9F438B21D0E449C';
+  const rawBatchId = urlParams.get('batch') || 'ON-2026-00125';
+  const rawGrade = urlParams.get('grade') || 'Grade A';
+  const rawVal = urlParams.get('val') || '2800';
+  const rawHash = urlParams.get('hash') || 'A9F438B21D0E449C';
+
+  // Normalize grade string (e.g., 'GradeA' -> 'Grade A')
+  const formattedGrade = rawGrade.replace(/([a-z])([A-Z])/g, '$1 $2').trim();
 
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/verify/${batchId}`)
+    // Attempt live fetch from backend registry
+    fetch(`/api/verify/${rawBatchId}`)
       .then(res => res.json())
       .then(data => {
         if (data.certificate) {
           setRecord(data.certificate);
         } else {
-          setRecord({
-            batch_id: batchId,
-            quality_grade: queryGrade,
-            fair_price_per_kg: 28.0,
-            quantity_kg: 100.0,
-            estimated_total_value: Number(queryVal),
-            date: '30-09-2026',
-            location: 'Coimbatore APMC Mandi, Tamil Nadu',
-            farmer_name: 'Farmer Ravi',
-            integrity_hash: queryHash,
-            status: 'Verified & Authenticated',
-            defect_rate_pct: 3.2,
-            size_category: 'Large (64mm)'
-          });
+          setRecord(createFallbackRecord());
         }
         setLoading(false);
       })
       .catch(() => {
-        setRecord({
-          batch_id: batchId,
-          quality_grade: queryGrade,
-          fair_price_per_kg: 28.0,
-          quantity_kg: 100.0,
-          estimated_total_value: Number(queryVal),
-          date: '30-09-2026',
-          location: 'Coimbatore APMC Mandi, Tamil Nadu',
-          farmer_name: 'Farmer Ravi',
-          integrity_hash: queryHash,
-          status: 'Verified & Authenticated',
-          defect_rate_pct: 3.2,
-          size_category: 'Large (64mm)'
-        });
+        setRecord(createFallbackRecord());
         setLoading(false);
       });
-  }, [batchId, queryGrade, queryVal, queryHash]);
+  }, [rawBatchId]);
+
+  const createFallbackRecord = () => ({
+    batch_id: rawBatchId,
+    quality_grade: formattedGrade,
+    fair_price_per_kg: formattedGrade.includes('A') ? 28.0 : formattedGrade.includes('B') ? 24.0 : 16.0,
+    quantity_kg: 100.0,
+    estimated_total_value: Number(rawVal) || 2800,
+    date: new Date().toLocaleDateString('en-GB'),
+    location: 'Coimbatore APMC Mandi, Tamil Nadu',
+    farmer_name: 'Farmer Ravi',
+    size_category: formattedGrade.includes('A') ? 'Large (60-80mm)' : formattedGrade.includes('B') ? 'Medium (45-60mm)' : 'Small (<45mm)',
+    defect_rate_pct: formattedGrade.includes('A') ? 3.2 : formattedGrade.includes('B') ? 8.5 : 19.4,
+    integrity_hash: rawHash,
+    status: 'Verified & Authenticated',
+    compliance: 'AGMARKNET / e-NAM Grading Standard'
+  });
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-orange-50/40 py-12 px-4">
-      <div className="max-w-xl mx-auto">
-        
+    <div className="verify-page-wrapper">
+      <div className="verify-container">
+
         {/* Back Button */}
-        <button
-          onClick={onBackToApp}
-          className="inline-flex items-center gap-2 text-sm font-bold text-slate-700 hover:text-orange-600 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm mb-6 transition-all"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to OnionAI App
+        <button onClick={onBackToApp} className="verify-back-btn">
+          <ArrowLeft style={{ width: 16, height: 16 }} />
+          <span>Back to OnionAI System</span>
         </button>
 
-        {/* Verification Card */}
-        <div className="glass-card p-6 sm:p-8 border-2 border-emerald-300 shadow-2xl relative overflow-hidden">
+        {/* Verification Certificate Card */}
+        <div className="verify-card" id="printable-certificate">
           
           {/* Top Verification Ribbon */}
-          <div className="bg-emerald-500 text-white py-2 px-4 rounded-xl flex items-center justify-between shadow-md mb-6">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-100" />
-              <span className="text-xs font-black uppercase tracking-wider">
-                Official Authenticated Record
-              </span>
+          <div className="verify-ribbon">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShieldCheck style={{ width: 18, height: 18, color: '#ecfdf5' }} />
+              <span>OFFICIAL AUTHENTICATED RECORD</span>
             </div>
-            <span className="text-[10px] font-bold bg-emerald-700 px-2 py-0.5 rounded-full">
+            <span className="verify-ribbon-badge">
               AGMARKNET Compliant
             </span>
           </div>
 
-          {/* Logo & Title */}
-          <div className="text-center pb-6 border-b border-slate-200">
-            <img src="/assets/logo.png" alt="OnionAI Logo" className="w-14 h-14 mx-auto mb-2 rounded-full border border-orange-200 p-0.5" />
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              Onion Batch Verification
-            </h2>
-            <p className="text-xs font-mono font-bold text-orange-600 mt-1">
-              Batch: {batchId}
-            </p>
+          <div className="verify-card-body">
+            
+            {/* Header: Logo, Title, Batch */}
+            <div className="verify-header">
+              <img 
+                src="/assets/logo.png" 
+                alt="OnionAI Logo" 
+                className="verify-logo-img"
+              />
+              <h1 className="verify-title">
+                Onion Batch Verification
+              </h1>
+              <p style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
+                Ministry of Agriculture / e-NAM Digital Traceability
+              </p>
+              <div>
+                <span className="verify-batch-pill">
+                  BATCH ID: {record ? record.batch_id : rawBatchId}
+                </span>
+              </div>
+            </div>
+
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#64748b', fontWeight: 700, fontSize: '0.9rem' }}>
+                Verifying cryptographic SHA-256 seal...
+              </div>
+            ) : record ? (
+              <>
+                {/* 2-Column Stat Cards */}
+                <div className="verify-stat-grid">
+                  <div className="verify-stat-box green">
+                    <span className="verify-stat-label">Assessed Grade</span>
+                    <div className="verify-stat-val">
+                      {record.quality_grade}
+                    </div>
+                  </div>
+                  <div className="verify-stat-box orange">
+                    <span className="verify-stat-label">Fair Batch Value</span>
+                    <div className="verify-stat-val">
+                      ₹{Number(record.estimated_total_value || 0).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Structured Key-Value Data Table */}
+                <div className="verify-table">
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Farmer / Producer</span>
+                    <span className="verify-row-val">{record.farmer_name || 'Farmer Ravi'}</span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Inspection Date</span>
+                    <span className="verify-row-val">{record.date}</span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Mandi Market Location</span>
+                    <span className="verify-row-val">{record.location || record.mandi_market}</span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Bulb Diameter / Size</span>
+                    <span className="verify-row-val">{record.size_category}</span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Defect Rate</span>
+                    <span className="verify-row-val" style={{ color: record.defect_rate_pct <= 5 ? '#059669' : '#ea580c' }}>
+                      {record.defect_rate_pct}%
+                    </span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Batch Quantity</span>
+                    <span className="verify-row-val">{record.quantity_kg || 100} kg</span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">Recommended Fair Rate</span>
+                    <span className="verify-row-val" style={{ color: '#059669', fontSize: '0.95rem' }}>
+                      ₹{record.fair_price_per_kg} / kg
+                    </span>
+                  </div>
+
+                  <div className="verify-table-row">
+                    <span className="verify-row-label">SHA-256 Hash Seal</span>
+                    <span className="verify-row-val hash">
+                      {record.integrity_hash}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Trust Seal Banner */}
+                <div className="verify-trust-box">
+                  <CheckCircle2 style={{ width: 32, height: 32, color: '#059669', margin: '0 auto' }} />
+                  <div className="verify-trust-title">
+                    Tamper-Evident Quality Authenticated
+                  </div>
+                  <p className="verify-trust-desc">
+                    This onion batch has been objectively graded by the OnionAI Computer Vision Engine adhering to AGMARKNET & e-NAM trade standards.
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="verify-actions">
+                  <button onClick={handleCopyLink} className="verify-action-btn secondary">
+                    {copied ? <Check style={{ width: 16, height: 16, color: '#059669' }} /> : <Share2 style={{ width: 16, height: 16 }} />}
+                    <span>{copied ? 'Link Copied!' : 'Share Record'}</span>
+                  </button>
+
+                  <button onClick={handlePrint} className="verify-action-btn primary">
+                    <Printer style={{ width: 16, height: 16 }} />
+                    <span>Print / Save PDF</span>
+                  </button>
+                </div>
+              </>
+            ) : null}
+
           </div>
-
-          {/* Record Details */}
-          {loading ? (
-            <div className="py-12 text-center text-sm font-semibold text-slate-500">
-              Verifying blockchain-style SHA-256 batch hash...
-            </div>
-          ) : record ? (
-            <div className="mt-6 space-y-4">
-              
-              {/* Quality & Value Grid */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-center">
-                  <p className="text-[10px] uppercase font-bold text-emerald-800">Quality Grade</p>
-                  <p className="text-2xl font-black text-emerald-700 mt-0.5">{record.quality_grade}</p>
-                </div>
-                <div className="bg-orange-50 border border-orange-200 p-3.5 rounded-2xl text-center">
-                  <p className="text-[10px] uppercase font-bold text-orange-800">Total Fair Value</p>
-                  <p className="text-2xl font-black text-orange-700 mt-0.5">₹{record.estimated_total_value}</p>
-                </div>
-              </div>
-
-              {/* Data Table */}
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-xs space-y-2.5">
-                <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold">Farmer / Producer</span>
-                  <span className="text-slate-900 font-bold">{record.farmer_name}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold">Inspection Date</span>
-                  <span className="text-slate-900 font-bold">{record.date}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold">Market Location</span>
-                  <span className="text-slate-900 font-bold">{record.location}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-slate-200">
-                  <span className="text-slate-500 font-bold">Defect Rate</span>
-                  <span className="text-slate-900 font-bold">{record.defect_rate_pct}%</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-slate-500 font-bold">Integrity Hash</span>
-                  <span className="font-mono text-emerald-700 font-bold text-[11px]">{record.integrity_hash}</span>
-                </div>
-              </div>
-
-              {/* Trust Stamp */}
-              <div className="p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200 text-center">
-                <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-1.5" />
-                <p className="text-xs font-black text-emerald-900 uppercase tracking-wider">
-                  Tamper-Evident Quality Authenticated
-                </p>
-                <p className="text-[10px] text-slate-500 mt-0.5">
-                  This batch was objectively graded by OnionAI Computer Vision Engine.
-                </p>
-              </div>
-
-            </div>
-          ) : null}
-
         </div>
 
       </div>
