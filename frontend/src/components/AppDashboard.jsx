@@ -3,7 +3,7 @@ import {
   Camera, Upload, Play, Sparkles, RefreshCw, AlertCircle, CheckCircle2, 
   Award, ArrowRight, ArrowLeft, ShieldAlert, CircleDot, TrendingUp, 
   Clock, Factory, ShieldCheck, QrCode, Printer, Share2, Check, 
-  Volume2, VolumeX, Globe, Eye, FileText, ChevronRight
+  Volume2, VolumeX, Globe, Eye, FileText, ChevronRight, ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { speakResult, stopSpeech } from '../utils/speech';
