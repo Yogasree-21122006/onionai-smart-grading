@@ -14,33 +14,33 @@ export function LandingPage({ t, lang, setLang, onStartApp }) {
     <div style={{ minHeight: '100vh', background: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
       
       {/* Top Formal Navbar */}
-      <header style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '12px 0', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="app-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <header className="landing-navbar">
+        <div className="app-container landing-navbar-inner">
           
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="landing-logo-group">
             <img 
               src="/assets/logo.png" 
               alt="OnionAI Logo" 
-              style={{ width: '48px', height: '48px', borderRadius: '50%', border: '2px solid #fed7aa', padding: '2px', background: 'white' }} 
+              className="landing-logo-img"
             />
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px' }} className="brand-font">
                   Onion<span style={{ color: '#ff6a00' }}>AI</span>
                 </span>
-                <span className="tag-pill tag-green" style={{ fontSize: '0.7rem' }}>e-NAM Live</span>
+                <span className="tag-pill tag-green landing-hide-mobile" style={{ fontSize: '0.7rem' }}>e-NAM Live</span>
               </div>
-              <p style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>
+              <p className="landing-tagline landing-hide-mobile">
                 {t.tagline}
               </p>
             </div>
           </div>
 
           {/* Right Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="landing-right-controls">
             {/* Language Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '6px 12px' }}>
+            <div className="landing-lang-selector">
               <Globe style={{ width: '16px', height: '16px', color: '#ff6a00', marginRight: '6px' }} />
               <select
                 value={lang}
@@ -57,7 +57,6 @@ export function LandingPage({ t, lang, setLang, onStartApp }) {
             <button 
               onClick={onStartApp}
               className="btn-orange"
-              style={{ padding: '8px 18px', fontSize: '0.88rem' }}
             >
               <Sparkles style={{ width: '16px', height: '16px' }} />
               <span>{t.startGrading}</span>
@@ -146,8 +145,8 @@ export function LandingPage({ t, lang, setLang, onStartApp }) {
       </main>
 
       {/* Footer */}
-      <footer style={{ background: '#0f172a', color: '#94a3b8', padding: '24px 0', borderTop: '1px solid #1e293b' }}>
-        <div className="app-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      <footer className="landing-footer">
+        <div className="app-container landing-footer-inner">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontWeight: 800, color: 'white' }}>Onion<span style={{ color: '#ff6a00' }}>AI</span></span>
             <span style={{ fontSize: '0.75rem' }}>• For Farmers, For Food, For a Sustainable Tomorrow</span>
